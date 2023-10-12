@@ -6,7 +6,9 @@ import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { apply } from '../../../lib/k8s/apiProxy';
 import { KubeObjectInterface } from '../../../lib/k8s/cluster';
+import { dispatchHeadlampEvent } from '../../../lib/util';
 import { clusterAction } from '../../../redux/actions/actions';
+import { HeadlampEventType } from '../../../redux/eventCallbackSlice';
 import ActionButton from '../ActionButton';
 import EditorDialog from './EditorDialog';
 
@@ -105,7 +107,10 @@ export default function CreateButton(props: CreateButtonProps) {
         />
       ) : (
         <Button
-          onClick={() => setOpenDialog(true)}
+          onClick={() => {
+            setOpenDialog(true);
+            dispatchHeadlampEvent(HeadlampEventType.CREATE_BUTTON);
+          }}
           startIcon={<InlineIcon icon="mdi:plus" />}
           color="primary"
           variant="contained"

@@ -15,7 +15,9 @@ import { useParams } from 'react-router-dom';
 import { Terminal as XTerminal } from 'xterm';
 import { KubeContainerStatus } from '../../lib/k8s/cluster';
 import Pod from '../../lib/k8s/pod';
+import { dispatchHeadlampEvent } from '../../lib/util';
 import { DefaultHeaderAction } from '../../redux/actionButtonsSlice';
+import { HeadlampEventType } from '../../redux/eventCallbackSlice';
 import { LightTooltip, SectionBox, SimpleTable } from '../common';
 import Link from '../common/Link';
 import { LogViewer, LogViewerProps } from '../common/LogViewer';
@@ -341,7 +343,13 @@ export default function PodDetails(props: PodDetailsProps) {
             action: (
               <AuthVisible item={item} authVerb="get" subresource="log">
                 <Tooltip title={t('Show Logs') as string}>
-                  <IconButton aria-label={t('logs')} onClick={() => setShowLogs(true)}>
+                  <IconButton
+                    aria-label={t('logs')}
+                    onClick={() => {
+                      setShowLogs(true);
+                      dispatchHeadlampEvent({ type: HeadlampEventType.POD_LOGS });
+                    }}
+                  >
                     <Icon icon="mdi:file-document-box-outline" />
                   </IconButton>
                 </Tooltip>
@@ -355,7 +363,10 @@ export default function PodDetails(props: PodDetailsProps) {
                 <Tooltip title={t('Terminal / Exec') as string}>
                   <IconButton
                     aria-label={t('terminal') as string}
-                    onClick={() => setShowTerminal(true)}
+                    onClick={() => {
+                      setShowTerminal(true);
+                      dispatchHeadlampEvent({ type: HeadlampEventType.POD_TERMINAL });
+                    }}
                   >
                     <Icon icon="mdi:console" />
                   </IconButton>
@@ -370,7 +381,10 @@ export default function PodDetails(props: PodDetailsProps) {
                 <Tooltip title={t('Attach') as string}>
                   <IconButton
                     aria-label={t('attach') as string}
-                    onClick={() => setIsAttached(true)}
+                    onClick={() => {
+                      setIsAttached(true);
+                      dispatchHeadlampEvent({ type: HeadlampEventType.POD_ATTACH });
+                    }}
                   >
                     <Icon icon="mdi:connection" />
                   </IconButton>

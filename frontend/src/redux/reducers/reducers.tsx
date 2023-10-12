@@ -5,6 +5,7 @@ import actionButtons from '../actionButtonsSlice';
 import configReducer from '../configSlice';
 import detailsViewSectionsSlice from '../detailsViewSectionsSlice';
 import filterReducer from '../filterSlice';
+import eventCallback from '../eventCallbackSlice';
 import clusterAction from './clusterAction';
 import uiReducer from './ui';
 
@@ -16,6 +17,7 @@ const reducers = combineReducers({
   plugins: pluginsReducer,
   actionButtons: actionButtons,
   detailsViewSections: detailsViewSectionsSlice,
+  eventCallback,
 });
 
 export type RootState = ReturnType<typeof reducers>;

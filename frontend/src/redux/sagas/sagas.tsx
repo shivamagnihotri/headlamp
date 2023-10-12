@@ -1,5 +1,15 @@
 import i18next from 'i18next';
-import { all, call, cancelled, delay, put, race, take, takeEvery } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  cancelled,
+  delay,
+  put,
+  race,
+  select,
+  take,
+  takeEvery,
+} from 'redux-saga/effects';
 import { CLUSTER_ACTION_GRACE_PERIOD } from '../../lib/util';
 import {
   Action,
@@ -7,8 +17,10 @@ import {
   CLUSTER_ACTION,
   CLUSTER_ACTION_CANCEL,
   ClusterAction,
+  HEADLAMP_EVENT,
   updateClusterAction,
 } from '../actions/actions';
+import { HeadlampEvent, HeadlampEventCallback } from '../eventCallbackSlice';
 
 function newActionKey() {
   return (new Date().getTime() + Math.random()).toString();
@@ -134,6 +146,18 @@ function* doClusterAction(action: CallbackAction, actionKey: string, uniqueCance
   }
 }
 
+function* watchHeadlampEvents() {
+  yield takeEvery(HEADLAMP_EVENT, runHeadlampEvent);
+}
+
+function* runHeadlampEvent(action: Action & { event: HeadlampEvent }) {
+  const { event } = action;
+  const callbacks: HeadlampEventCallback[] = yield select(state => state.usageTracker.trackerFuncs);
+  for (const callback of callbacks) {
+    callback(event);
+  }
+}
+
 export default function* rootSaga() {
-  yield all([watchClusterAction()]);
+  yield all([watchClusterAction(), watchHeadlampEvents()]);
 }

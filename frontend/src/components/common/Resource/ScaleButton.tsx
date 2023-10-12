@@ -16,7 +16,9 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { KubeObject } from '../../../lib/k8s/cluster';
+import { dispatchHeadlampEvent } from '../../../lib/util';
 import { CallbackActionOptions, clusterAction } from '../../../redux/actions/actions';
+import { HeadlampEventType } from '../../../redux/eventCallbackSlice';
 import { LightTooltip } from '../Tooltip';
 import AuthVisible from './AuthVisible';
 
@@ -79,7 +81,12 @@ export default function ScaleButton(props: ScaleButtonProps) {
       }}
     >
       <Tooltip title={t('frequent|Scale') as string}>
-        <IconButton aria-label={t('frequent|scale')} onClick={() => setOpenDialog(true)}>
+        <IconButton
+          aria-label={t('frequent|scale')}
+          onClick={() => {
+            setOpenDialog(true);
+          }}
+        >
           <Icon icon="mdi:content-copy" />
         </IconButton>
       </Tooltip>
@@ -210,7 +217,13 @@ function ScaleDialog(props: ScaleDialogProps) {
         <Button onClick={onClose} color="primary">
           {t('frequent|Cancel')}
         </Button>
-        <Button onClick={() => onSave(numReplicas)} color="primary">
+        <Button
+          onClick={() => {
+            onSave(numReplicas);
+            dispatchHeadlampEvent({ type: HeadlampEventType.SCALE_RESOURCE });
+          }}
+          color="primary"
+        >
           {t('frequent|Apply')}
         </Button>
       </DialogActions>

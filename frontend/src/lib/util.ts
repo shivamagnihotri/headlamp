@@ -3,6 +3,8 @@ import React from 'react';
 import { matchPath, useHistory } from 'react-router';
 import helpers from '../helpers';
 import { filterGeneric, filterResource } from '../redux/filterSlice';
+import { runHeadlampEvent } from '../redux/actions/actions';
+import { HeadlampEvent, HeadlampEventType } from '../redux/eventCallbackSlice';
 import { useTypedSelector } from '../redux/reducers/reducers';
 import store from '../redux/stores/store';
 import { ApiError } from './k8s/apiProxy';
@@ -412,6 +414,16 @@ export function useId(prefix = '') {
   );
 
   return id;
+}
+
+export function dispatchHeadlampEvent(eventInfo: HeadlampEvent | HeadlampEventType) {
+  let event: HeadlampEvent;
+  if (typeof eventInfo === 'string') {
+    event = { type: eventInfo };
+  } else {
+    event = eventInfo;
+  }
+  store.dispatch(runHeadlampEvent(event));
 }
 
 // Make units available from here

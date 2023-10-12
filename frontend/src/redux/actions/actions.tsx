@@ -6,11 +6,13 @@ import { DetailsViewSectionType } from '../../components/DetailsViewSection';
 import { SidebarEntryProps } from '../../components/Sidebar';
 import { Notification } from '../../lib/notification';
 import { Route } from '../../lib/router';
+import { HeadlampEvent } from '../eventCallbackSlice';
 import { UIState } from '../reducers/ui';
 
 export const CLUSTER_ACTION = 'CLUSTER_ACTION';
 export const CLUSTER_ACTION_UPDATE = 'CLUSTER_ACTION_UPDATE';
 export const CLUSTER_ACTION_CANCEL = 'CLUSTER_ACTION_CANCEL';
+export const HEADLAMP_EVENT = 'HEADLAMP_EVENT';
 export const UI_SIDEBAR_SET_SELECTED = 'UI_SIDEBAR_SET_SELECTED';
 export const UI_SIDEBAR_SET_VISIBLE = 'UI_SIDEBAR_SET_VISIBLE';
 export const UI_SIDEBAR_SET_ITEM = 'UI_SIDEBAR_SET_ITEM';
@@ -194,4 +196,8 @@ export type FunctionsToOverride = {
 
 export function setFunctionsToOverride(override: FunctionsToOverride) {
   return { type: UI_FUNCTIONS_OVERRIDE, override };
+}
+
+export function runHeadlampEvent(event: HeadlampEvent) {
+  return { type: HEADLAMP_EVENT, event };
 }

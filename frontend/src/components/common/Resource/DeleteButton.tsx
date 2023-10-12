@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { KubeObject } from '../../../lib/k8s/cluster';
+import { dispatchHeadlampEvent } from '../../../lib/util';
 import { CallbackActionOptions, clusterAction } from '../../../redux/actions/actions';
+import { HeadlampEventType } from '../../../redux/eventCallbackSlice';
 import ActionButton from '../ActionButton';
 import { ConfirmDialog } from '../Dialog';
 import AuthVisible from './AuthVisible';
@@ -62,7 +64,9 @@ export default function DeleteButton(props: DeleteButtonProps) {
     >
       <ActionButton
         description={t('frequent|Delete')}
-        onClick={() => setOpenAlert(true)}
+        onClick={() => {
+          setOpenAlert(true);
+        }}
         icon="mdi:delete"
       />
       <ConfirmDialog
@@ -70,7 +74,10 @@ export default function DeleteButton(props: DeleteButtonProps) {
         title={t('resource|Delete item')}
         description={t('resource|Are you sure you want to delete this item?')}
         handleClose={() => setOpenAlert(false)}
-        onConfirm={() => deleteFunc()}
+        onConfirm={() => {
+          deleteFunc();
+          dispatchHeadlampEvent(HeadlampEventType.DELETE_RESOURCE);
+        }}
       />
     </AuthVisible>
   );
